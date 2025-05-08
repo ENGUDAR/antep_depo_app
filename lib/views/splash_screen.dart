@@ -53,12 +53,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 242, 185, 29),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Center(
             child: AnimatedOpacity(
-                duration: const Duration(seconds: 2), // Animasyon süresi
+                duration: const Duration(seconds: 3), // Animasyon süresi
                 opacity: opacity, // Riverpod'dan alınan opacity değeri
                 child: Hero(
                   tag: 'hero-demo',
@@ -81,9 +81,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                     );
                   },
                   child: Image.asset(
-                    AssetImages.logo,
+                    AssetImages.logo2,
                     width: MediaQuery.of(context).size.width,
-                    height: 150,
+                    height: 250,
                   ),
                 )),
           ),

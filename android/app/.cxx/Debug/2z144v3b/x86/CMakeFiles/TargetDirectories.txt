@@ -1,0 +1,2 @@
+C:/flutter/antep_depo_app/android/app/.cxx/Debug/2z144v3b/x86/CMakeFiles/edit_cache.dir
+C:/flutter/antep_depo_app/android/app/.cxx/Debug/2z144v3b/x86/CMakeFiles/rebuild_cache.dir

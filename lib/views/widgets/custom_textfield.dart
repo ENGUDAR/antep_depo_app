@@ -47,23 +47,24 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
                   },
                   icon: Icon(
                     _isObscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                    color: const Color.fromARGB(255, 205, 158, 27),
                   ),
                 )
               : null,
           prefixIcon: Icon(
             widget.icon,
-            color: const Color.fromARGB(255, 95, 128, 31),
+            color: const Color.fromARGB(255, 205, 158, 27),
           ),
           contentPadding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
           labelText: widget.message,
-          labelStyle: Theme.of(context).textTheme.titleMedium?.copyWith(color: const Color.fromARGB(255, 95, 128, 31)),
+          labelStyle: Theme.of(context).textTheme.titleMedium?.copyWith(color: const Color.fromARGB(255, 205, 158, 27)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
-            borderSide: const BorderSide(color: Color.fromARGB(255, 95, 128, 31)),
+            borderSide: const BorderSide(color: Color.fromARGB(255, 205, 158, 27)),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
-            borderSide: const BorderSide(color: Color.fromARGB(255, 95, 128, 31)),
+            borderSide: const BorderSide(color: Color.fromARGB(255, 205, 158, 27)),
           ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
         ),

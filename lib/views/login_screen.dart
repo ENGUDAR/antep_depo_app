@@ -79,100 +79,151 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with ProjectDioMixin 
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Hero(
-                  tag: 'hero-demo',
-                  flightShuttleBuilder: (flightContext, animation, direction, fromHero, toHero) {
-                    return AnimatedBuilder(
-                      animation: animation,
-                      builder: (context, child) {
-                        // Yukarıdan aşağıya kayma animasyonu (geri dönüşte tersine)
-                        final offset = Tween<Offset>(
-                          begin: const Offset(0, -1.0), // Yukarıdan başlayacak
-                          end: Offset.zero, // Ortada bitecek
-                        ).animate(animation).value;
+        //appBar: AppBar(),
+        body: SingleChildScrollView(
+          child: Column(
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  Stack(children: [
+                    ClipPath(
+                      clipper: WaveClipper(),
+                      child: Container(
+                        height: 300,
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromARGB(255, 242, 185, 29),
+                              Color.fromARGB(255, 242, 185, 29)
+                            ], // mor-mavi geçiş
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Hero(
+                      tag: 'hero-demo',
+                      flightShuttleBuilder: (flightContext, animation, direction, fromHero, toHero) {
+                        return AnimatedBuilder(
+                          animation: animation,
+                          builder: (context, child) {
+                            // Yukarıdan aşağıya kayma animasyonu (geri dönüşte tersine)
+                            final offset = Tween<Offset>(
+                              begin: const Offset(0, -1.0), // Yukarıdan başlayacak
+                              end: Offset.zero, // Ortada bitecek
+                            ).animate(animation).value;
 
-                        return Transform.translate(
-                          offset: Offset(0, offset.dy * MediaQuery.of(context).size.height),
-                          child: child,
+                            return Transform.translate(
+                              offset: Offset(0, offset.dy * MediaQuery.of(context).size.height),
+                              child: child,
+                            );
+                          },
+                          child: toHero.widget,
                         );
                       },
-                      child: toHero.widget,
-                    );
-                  },
-                  child: Image.asset(
-                    AssetImages.logo,
-                    width: MediaQuery.of(context).size.width,
-                  ),
-                ),
+                      child: Container(
+                        height: 250,
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/360_Stocker.jpg'),
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(55),
+                            bottomRight: Radius.circular(55),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]),
+                ],
+              ),
 
-                //todo: Burada Giriş FormField Kısmı olacak
-                Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Card(
-                    color: Colors.white,
-                    //color: const Color.fromARGB(255, 248, 255, 234).withOpacity(0.6),
-                    elevation: 20,
-                    child: Form(
-                        key: formKey,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              //Todo: Kullanıcı Adı
-                              CustomTextFormField(
-                                controller: _kullaniciAdiController,
-                                message: "Kullanıcı Adı",
-                                errorMessage: "Kullanıcı Adı Boş Olamaz",
-                                icon: Icons.account_circle_outlined,
-                                isObscure: false,
-                              ),
+              //todo: Burada Giriş FormField Kısmı olacak
+              Padding(
+                padding: const EdgeInsets.only(top: 30, left: 20, right: 20),
+                child: Card(
+                  color: Colors.white,
+                  //color: const Color.fromARGB(255, 248, 255, 234).withOpacity(0.6),
+                  elevation: 20,
+                  child: Form(
+                      key: formKey,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            //Todo: Kullanıcı Adı
+                            CustomTextFormField(
+                              controller: _kullaniciAdiController,
+                              message: "Kullanıcı Adı",
+                              errorMessage: "Kullanıcı Adı Boş Olamaz",
+                              icon: Icons.account_circle_outlined,
+                              isObscure: false,
+                            ),
 
-                              CustomTextFormField(
-                                  isObscure: true,
-                                  icon: Icons.lock_outline_rounded,
-                                  controller: _passwordController,
-                                  message: "Şifre",
-                                  errorMessage: "Şifre Boş Olamaz"),
+                            CustomTextFormField(
+                                isObscure: true,
+                                icon: Icons.lock_outline_rounded,
+                                controller: _passwordController,
+                                message: "Şifre",
+                                errorMessage: "Şifre Boş Olamaz"),
 
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                child: ElevatedButton(
-                                  onPressed: login,
-                                  style: ElevatedButton.styleFrom(
-                                    //padding: const EdgeInsets.symmetric(vertical: 10),
-                                    backgroundColor: const Color.fromARGB(255, 127, 171, 41),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Giriş Yap',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleLarge
-                                        ?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              child: ElevatedButton(
+                                onPressed: login,
+                                style: ElevatedButton.styleFrom(
+                                  //padding: const EdgeInsets.symmetric(vertical: 10),
+                                  backgroundColor: const Color.fromARGB(255, 242, 185, 29),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
+                                child: Text(
+                                  'Giriş Yap',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ],
-                          ),
-                        )),
-                  ),
+                            ),
+                          ],
+                        ),
+                      )),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
+}
+
+// Dalgayı çizen özel clipper
+class WaveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0, size.height - 60);
+    path.quadraticBezierTo(
+      size.width / 2,
+      size.height,
+      size.width,
+      size.height - 60,
+    );
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

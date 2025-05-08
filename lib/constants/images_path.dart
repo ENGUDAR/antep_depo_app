@@ -3,6 +3,7 @@ extension AssetImages on String {
 
   // Logo
   static const String logo = '$_basePath/antepLogo.png';
+  static const String logo2 = '$_basePath/360_Stocker.jpg';
 
   // Icons
 
