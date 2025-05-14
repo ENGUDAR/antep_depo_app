@@ -41,7 +41,9 @@ class _SiparisListState extends ConsumerState<SiparisList> {
 
       PMScanner.onDecode = (Symbology symbology, String barcode) {
         if (barcode.isNotEmpty) {
-          final success = ref.read(urunStateProvider.notifier).processBarkod(barcode, ref, context);
+          final success = ref
+              .read(urunStateProvider.notifier)
+              .processBarkod(barcode, ref, context);
 
           if (success) {
             // Başarılı işlemden sonra sepet barkodunu sıfırla
@@ -63,7 +65,11 @@ class _SiparisListState extends ConsumerState<SiparisList> {
     final urunler = ref.watch(urunStateProvider);
 
     return Scaffold(
-      appBar: CustomAppbar(),
+      backgroundColor: const Color(0xFFFDF7E4),
+      appBar: CustomAppbar(
+        showBackButton: true,
+        onBackPressed: () => Navigator.of(context).pop(),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
         child: urunler.isEmpty
@@ -73,13 +79,16 @@ class _SiparisListState extends ConsumerState<SiparisList> {
                   const Center(
                     child: Text(
                       "Gösterilecek ürün yok",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
-                      final tamam = await ref.read(urunStateProvider.notifier).UrunlerveSepetlerTamamla(context);
+                      final tamam = await ref
+                          .read(urunStateProvider.notifier)
+                          .UrunlerveSepetlerTamamla(context);
                       // Tamamla işlemi burada yapılabilir
                       if (tamam) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -105,7 +114,8 @@ class _SiparisListState extends ConsumerState<SiparisList> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15, horizontal: 30),
                       backgroundColor: loginColors,
                     ),
                     child: const Text(
@@ -120,11 +130,21 @@ class _SiparisListState extends ConsumerState<SiparisList> {
                 itemBuilder: (context, index) {
                   final urun = urunler[index];
                   return Card(
-                    elevation: 9,
-                    margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    elevation: 5,
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                      side: BorderSide(
+                        color: const Color(0xFFF2B91D).withOpacity(0.5),
+                        width: 1,
+                      ),
+                    ),
+                    color: Colors.white,
                     child: ListTile(
                       title: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 15),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -154,21 +174,28 @@ class _SiparisListState extends ConsumerState<SiparisList> {
 
                                       final success = await ref
                                           .read(urunStateProvider.notifier)
-                                          .removeProductAndPostSepets(urun.barkod, context, urun.sepetler);
+                                          .removeProductAndPostSepets(
+                                              urun.barkod,
+                                              context,
+                                              urun.sepetler);
 
                                       if (success) {
                                         // Başarılı mesaj göster
-                                        ScaffoldMessenger.of(context).showSnackBar(
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
                                           SnackBar(
-                                            content: Text("Sipariş beklemeye alındı: ${urun.urunAdi}"),
+                                            content: Text(
+                                                "Sipariş beklemeye alındı: ${urun.urunAdi}"),
                                             backgroundColor: Colors.green,
                                           ),
                                         );
                                       } else {
                                         // Başarısızlık mesajı göster
-                                        ScaffoldMessenger.of(context).showSnackBar(
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
                                           const SnackBar(
-                                            content: Text("Sipariş beklemeye alınamadı."),
+                                            content: Text(
+                                                "Sipariş beklemeye alınamadı."),
                                             backgroundColor: Colors.red,
                                           ),
                                         );
@@ -182,7 +209,8 @@ class _SiparisListState extends ConsumerState<SiparisList> {
                                       child: Text("Beklemeye al"),
                                     ),
                                   ],
-                                  icon: const Icon(Icons.more_vert), // 3 nokta ikonu
+                                  icon: const Icon(
+                                      Icons.more_vert), // 3 nokta ikonu
                                 ),
                               ],
                             ),
@@ -195,7 +223,8 @@ class _SiparisListState extends ConsumerState<SiparisList> {
                         ),
                       ),
                       subtitle: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 15),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.black),
                           borderRadius: BorderRadius.circular(20),
@@ -211,9 +240,11 @@ class _SiparisListState extends ConsumerState<SiparisList> {
                                 ListTile(
                                   title: Text(
                                     sepet.sepetAdi,
-                                    style: Theme.of(context).textTheme.titleLarge,
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
                                   ),
-                                  leading: const Icon(Icons.shopping_bag_outlined),
+                                  leading:
+                                      const Icon(Icons.shopping_bag_outlined),
                                   subtitle: Text(
                                     "Barkod: ${sepet.sepetBarkodu}",
                                     style: const TextStyle(fontSize: 17),

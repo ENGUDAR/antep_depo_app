@@ -13,7 +13,8 @@ final barcodeProviderr = StateProvider<String?>((ref) => null);
 
 // OrderServices provider
 final orderServicesProvider = Provider<OrderServices>((ref) {
-  return OrderServices(dio: Dio(BaseOptions(baseUrl: "https://www.kardamiyim.com/wms2/")));
+  return OrderServices(
+      dio: Dio(BaseOptions(baseUrl: "https://www.kardamiyim.com/wms2/")));
 });
 
 class SepetCikar extends ConsumerStatefulWidget {
@@ -64,18 +65,25 @@ class _SepetCikarState extends ConsumerState<SepetCikar> {
   @override
   Widget build(BuildContext context) {
     final barcodeNo = ref.watch(barcodeProviderr); // Barkod değerini izliyoruz
-    final orderServices = ref.read(orderServicesProvider); // OrderServices instance
+    final orderServices =
+        ref.read(orderServicesProvider); // OrderServices instance
 
     return SafeArea(
       child: Scaffold(
-        appBar: CustomAppbar(),
+        appBar: CustomAppbar(
+          showBackButton: true,
+          onBackPressed: () => Navigator.of(context).pop(),
+        ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 "Okutulan Barkod",
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               Container(
@@ -93,51 +101,71 @@ class _SepetCikarState extends ConsumerState<SepetCikar> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
-                child: ElevatedButton(
-                  style: buttonStyle(15, 150),
-                  onPressed: () async {
-                    if (barcodeNo != null && barcodeNo.isNotEmpty) {
-                      // SharedPreferences'tan userId al
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      final userId = prefs.getString('userId') ?? "1";
+                padding:
+                    const EdgeInsets.symmetric(vertical: 40, horizontal: 8),
+                child: Container(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: buttonStyle(15, 150),
+                    onPressed: () async {
+                      if (barcodeNo != null && barcodeNo.isNotEmpty) {
+                        // SharedPreferences'tan userId al
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        final userId = prefs.getString('userId') ?? "1";
 
-                      // API isteğini yap
-                      final success = await orderServices.cikarSepet(userId, barcodeNo);
+                        // API isteğini yap
+                        final success =
+                            await orderServices.cikarSepet(userId, barcodeNo);
 
-                      if (success) {
-                        // Snackbar ile başarı mesajı göster
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text("Sepet başarıyla çıkarıldı."),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
+                        if (success) {
+                          // Snackbar ile başarı mesajı göster
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Sepet başarıyla çıkarıldı."),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
 
-                        // Barkod numarasını sıfırla
-                        ref.read(barcodeProviderr.notifier).state = null;
+                          // Barkod numarasını sıfırla
+                          ref.read(barcodeProviderr.notifier).state = null;
+                        } else {
+                          // Snackbar ile hata mesajı göster
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Sepet çıkarılamadı."),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
                       } else {
-                        // Snackbar ile hata mesajı göster
+                        // Snackbar ile uyarı mesajı göster
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text("Sepet çıkarılamadı."),
+                            content: Text("Lütfen barkod okutun."),
                             backgroundColor: Colors.red,
                           ),
                         );
                       }
-                    } else {
-                      // Snackbar ile uyarı mesajı göster
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Lütfen barkod okutun."),
-                          backgroundColor: Colors.red,
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.delete_outline,
+                          color: Colors.white,
+                          size: 24,
                         ),
-                      );
-                    }
-                  },
-                  child: Text(
-                    "Çıkar",
-                    style: Theme.of(context).textTheme.titleMedium,
+                        const SizedBox(width: 8),
+                        Text(
+                          "Çıkar",
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: Colors.white,
+                                  ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               )

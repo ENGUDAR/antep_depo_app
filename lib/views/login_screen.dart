@@ -14,7 +14,8 @@ class LoginScreen extends ConsumerStatefulWidget {
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> with ProjectDioMixin {
+class _LoginScreenState extends ConsumerState<LoginScreen>
+    with ProjectDioMixin {
   final formKey = GlobalKey<FormState>();
   late TextEditingController _kullaniciAdiController;
   late TextEditingController _passwordController;
@@ -61,7 +62,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with ProjectDioMixin 
             SnackBar(
               content: Text(
                 'Giriş başarısız',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(color: Colors.white),
               ),
               backgroundColor: Colors.red,
             ),
@@ -106,18 +110,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with ProjectDioMixin 
                     ),
                     Hero(
                       tag: 'hero-demo',
-                      flightShuttleBuilder: (flightContext, animation, direction, fromHero, toHero) {
+                      flightShuttleBuilder: (flightContext, animation,
+                          direction, fromHero, toHero) {
                         return AnimatedBuilder(
                           animation: animation,
                           builder: (context, child) {
                             // Yukarıdan aşağıya kayma animasyonu (geri dönüşte tersine)
                             final offset = Tween<Offset>(
-                              begin: const Offset(0, -1.0), // Yukarıdan başlayacak
+                              begin:
+                                  const Offset(0, -1.0), // Yukarıdan başlayacak
                               end: Offset.zero, // Ortada bitecek
                             ).animate(animation).value;
 
                             return Transform.translate(
-                              offset: Offset(0, offset.dy * MediaQuery.of(context).size.height),
+                              offset: Offset(
+                                  0,
+                                  offset.dy *
+                                      MediaQuery.of(context).size.height),
                               child: child,
                             );
                           },
@@ -153,7 +162,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with ProjectDioMixin 
                   child: Form(
                       key: formKey,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 30),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -180,7 +190,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with ProjectDioMixin 
                                 onPressed: login,
                                 style: ElevatedButton.styleFrom(
                                   //padding: const EdgeInsets.symmetric(vertical: 10),
-                                  backgroundColor: const Color.fromARGB(255, 242, 185, 29),
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 242, 185, 29),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
                                   ),
@@ -190,7 +201,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with ProjectDioMixin 
                                   style: Theme.of(context)
                                       .textTheme
                                       .titleLarge
-                                      ?.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+                                      ?.copyWith(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ),

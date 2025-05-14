@@ -15,7 +15,8 @@ class BekleyenSiparisList extends ConsumerStatefulWidget {
   final String siparisIds;
   final List<String> sepetIds;
   @override
-  ConsumerState<BekleyenSiparisList> createState() => _BekleyenSiparisListState();
+  ConsumerState<BekleyenSiparisList> createState() =>
+      _BekleyenSiparisListState();
 }
 
 class _BekleyenSiparisListState extends ConsumerState<BekleyenSiparisList> {
@@ -23,7 +24,9 @@ class _BekleyenSiparisListState extends ConsumerState<BekleyenSiparisList> {
   void initState() {
     List<String> result = [widget.siparisIds];
 
-    ref.read(bekleyenSepetUrunlerProvider.notifier).bekleyenSepetUrunFetch(result);
+    ref
+        .read(bekleyenSepetUrunlerProvider.notifier)
+        .bekleyenSepetUrunFetch(result);
     _initializeScanner();
     super.initState();
   }
@@ -36,7 +39,9 @@ class _BekleyenSiparisListState extends ConsumerState<BekleyenSiparisList> {
 
       PMScanner.onDecode = (Symbology symbology, String barcode) {
         if (barcode.isNotEmpty) {
-          ref.read(bekleyenSepetUrunlerProvider.notifier).processBarkod(barcode, context);
+          ref
+              .read(bekleyenSepetUrunlerProvider.notifier)
+              .processBarkod(barcode, context);
         }
       };
     } else {
@@ -54,7 +59,11 @@ class _BekleyenSiparisListState extends ConsumerState<BekleyenSiparisList> {
     final bekleyenSepetUrunler = ref.watch(bekleyenSepetUrunlerProvider);
 
     return Scaffold(
-      appBar: CustomAppbar(),
+      backgroundColor: const Color(0xFFFDF7E4),
+      appBar: CustomAppbar(
+        showBackButton: true,
+        onBackPressed: () => Navigator.of(context).pop(),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         child: Column(
@@ -67,7 +76,8 @@ class _BekleyenSiparisListState extends ConsumerState<BekleyenSiparisList> {
                         const Center(
                           child: Text(
                             "Gösterilecek ürün yok",
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -75,7 +85,8 @@ class _BekleyenSiparisListState extends ConsumerState<BekleyenSiparisList> {
                           onPressed: () async {
                             final tamamla = await ref
                                 .read(bekleyenSepetUrunlerProvider.notifier)
-                                .bekleyenUrunlerTamamla(widget.sepetIds, context);
+                                .bekleyenUrunlerTamamla(
+                                    widget.sepetIds, context);
 
                             if (tamamla) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -102,7 +113,8 @@ class _BekleyenSiparisListState extends ConsumerState<BekleyenSiparisList> {
                             // Tamamla işlemi burada yapılabilir
                           },
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 30),
                             backgroundColor: loginColors,
                           ),
                           child: const Text(
@@ -117,7 +129,17 @@ class _BekleyenSiparisListState extends ConsumerState<BekleyenSiparisList> {
                       itemBuilder: (context, index) {
                         final urun = bekleyenSepetUrunler[index];
                         return Card(
-                          elevation: 7,
+                          elevation: 5,
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 4),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            side: BorderSide(
+                              color: const Color(0xFFF2B91D).withOpacity(0.5),
+                              width: 1,
+                            ),
+                          ),
+                          color: Colors.white,
                           child: ListTile(
                             title: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,7 +158,8 @@ class _BekleyenSiparisListState extends ConsumerState<BekleyenSiparisList> {
                                   // Text widget'ını kapsamak için kullanılır
                                   child: Text(
                                     urun.urunAdi,
-                                    overflow: TextOverflow.ellipsis, // Uzun metni kesip '...' ekler
+                                    overflow: TextOverflow
+                                        .ellipsis, // Uzun metni kesip '...' ekler
                                     maxLines: 2, // Maksimum 2 satır gösterir
                                     style: const TextStyle(fontSize: 17),
                                   ),
@@ -148,7 +171,8 @@ class _BekleyenSiparisListState extends ConsumerState<BekleyenSiparisList> {
                               children: [
                                 const Divider(),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       "Barkod",
@@ -164,7 +188,8 @@ class _BekleyenSiparisListState extends ConsumerState<BekleyenSiparisList> {
                                   ],
                                 ),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     const Text(
                                       "Adet",

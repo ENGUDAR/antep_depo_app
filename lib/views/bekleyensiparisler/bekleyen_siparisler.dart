@@ -27,7 +27,11 @@ class _BekleyenSiparislerState extends ConsumerState<BekleyenSiparisler> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: CustomAppbar(),
+        backgroundColor: const Color(0xFFFDF7E4),
+        appBar: CustomAppbar(
+          showBackButton: true,
+          onBackPressed: () => Navigator.of(context).pop(),
+        ),
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           child: Column(
@@ -49,9 +53,21 @@ class _BekleyenSiparislerState extends ConsumerState<BekleyenSiparisler> {
                               ));
                             },
                             child: Card(
-                              elevation: 7,
+                              elevation: 5,
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 4),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                side: BorderSide(
+                                  color:
+                                      const Color(0xFFF2B91D).withOpacity(0.5),
+                                  width: 1,
+                                ),
+                              ),
+                              color: Colors.white,
                               child: ListTile(
-                                leading: const Icon(Icons.shopping_bag_outlined),
+                                leading:
+                                    const Icon(Icons.shopping_bag_outlined),
                                 title: Text(
                                   sepet.sepetAdi,
                                   style: const TextStyle(fontSize: 20),
@@ -64,8 +80,12 @@ class _BekleyenSiparislerState extends ConsumerState<BekleyenSiparisler> {
                                       message1: "Sepet No",
                                       message2: sepet.siparisId,
                                     ),
-                                    CustomRow(message1: "Kargo", message2: sepet.kargo),
-                                    CustomRow(message1: "Kaynak", message2: sepet.kaynak),
+                                    CustomRow(
+                                        message1: "Kargo",
+                                        message2: sepet.kargo),
+                                    CustomRow(
+                                        message1: "Kaynak",
+                                        message2: sepet.kaynak),
                                   ],
                                 ),
                               ),

@@ -62,159 +62,194 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
         ref.read(selectedKaynakValueProvider.notifier).state = null;
         ref.read(selectedFirmaValueProvider.notifier).state = null;
       },
-      child: Scaffold(
-        floatingActionButton: ref.watch(siparisProvider).isEmpty
-            ? null // Eğer siparisState boşsa butonu göstermiyoruz
-            : FloatingActionButton(
-                backgroundColor: Colors.black,
-                onPressed: () {
-                  // Ekranda gösterilen siparişlerin siparis_id'lerini al
-                  final siparisIdListesi = ref.read(siparisProvider).map((siparis) => siparis.siparisId).toList();
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: const Color(0xFFFDF7E4),
+          floatingActionButton: ref.watch(siparisProvider).isEmpty
+              ? null // Eğer siparisState boşsa butonu göstermiyoruz
+              : FloatingActionButton(
+                  backgroundColor: Colors.black,
+                  onPressed: () {
+                    // Ekranda gösterilen siparişlerin siparis_id'lerini al
+                    final siparisIdListesi = ref
+                        .read(siparisProvider)
+                        .map((siparis) => siparis.siparisId)
+                        .toList();
 
-                  // SepetListe sayfasına sipariş ID listesini gönder
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => SiparisList(siparisIdListesi),
-                  ));
-                },
-                child: const Icon(
-                  Icons.add,
-                  color: loginColors,
-                ),
-              ),
-        appBar: CustomAppbar(),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          child: Column(
-            children: [
-              // Kaynak Dropdown
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20), border: Border.all(color: loginColors, width: 2)),
-                width: MediaQuery.of(context).size.width,
-                child: kaynakOptionsAsync.when(
-                  data: (kaynakOptions) => DropdownButton<String>(
-                    isExpanded: true,
-                    menuWidth: MediaQuery.of(context).size.width / 1.1,
-                    icon: const Icon(
-                      Icons.arrow_drop_down_sharp,
-                      color: loginColors,
-                    ),
-                    elevation: 1,
-                    borderRadius: BorderRadius.circular(20),
-                    underline: const SizedBox(),
-                    value: selectedKaynakValue,
-                    hint: const Text('Sipariş Kaynak'),
-                    items: kaynakOptions.map((String item) {
-                      return DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(item),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      ref.read(selectedKaynakValueProvider.notifier).state = newValue;
-                    },
-                  ),
-                  loading: () => const Center(
-                      child: CircularProgressIndicator(
-                    color: loginColors,
-                  )),
-                  error: (error, stack) => Text('Hata: $error'),
-                ),
-              ),
-              const SizedBox(height: 20),
-              // Kargo Dropdown
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20), border: Border.all(color: loginColors, width: 2)),
-                width: MediaQuery.of(context).size.width,
-                child: kargoOptionsAsync.when(
-                  data: (kargoOptions) => DropdownButton<String>(
-                    isExpanded: true,
-                    menuWidth: MediaQuery.of(context).size.width / 1.1,
-                    icon: const Icon(
-                      Icons.arrow_drop_down_sharp,
-                      color: loginColors,
-                    ),
-                    elevation: 1,
-                    borderRadius: BorderRadius.circular(20),
-                    underline: const SizedBox(),
-                    value: selectedFirmaValue,
-                    hint: const Text('Kargo Firması'),
-                    items: kargoOptions.map((String item) {
-                      return DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(item),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      ref.read(selectedFirmaValueProvider.notifier).state = newValue;
-                    },
-                  ),
-                  loading: () => const Center(
-                      child: CircularProgressIndicator(
-                    color: loginColors,
-                  )),
-                  error: (error, stack) => Text('Hata: $error'),
-                ),
-              ),
-              const SizedBox(height: 10),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: loginColors),
-                  onPressed: () async {
-                    _sendRequest(context);
+                    // SepetListe sayfasına sipariş ID listesini gönder
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SiparisList(siparisIdListesi),
+                    ));
                   },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Filtrele",
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white),
+                  child: const Icon(
+                    Icons.add,
+                    color: loginColors,
+                  ),
+                ),
+          appBar: CustomAppbar(
+            showBackButton: true,
+            onBackPressed: () => Navigator.of(context).pop(),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            child: Column(
+              children: [
+                // Kaynak Dropdown
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: loginColors, width: 2)),
+                  width: MediaQuery.of(context).size.width,
+                  child: kaynakOptionsAsync.when(
+                    data: (kaynakOptions) => DropdownButton<String>(
+                      isExpanded: true,
+                      menuWidth: MediaQuery.of(context).size.width / 1.1,
+                      icon: const Icon(
+                        Icons.arrow_drop_down_sharp,
+                        color: loginColors,
                       ),
-                      const SizedBox(width: 5),
-                      const Icon(
-                        Icons.search,
-                        color: Colors.white,
-                        size: 25,
-                      )
-                    ],
-                  )),
-              const SizedBox(height: 20),
-              // Diğer filtreler ve liste gösterimi
-              Expanded(
-                child: siparisState.isEmpty
-                    ? const Center(child: Text("Gösterilecek sipariş yok"))
-                    : ListView.builder(
-                        itemCount: siparisState.length,
-                        itemBuilder: (context, index) {
-                          final siparis = siparisState[index];
-                          return Card(
-                            elevation: 7,
-                            child: ListTile(
-                              leading: const Icon(Icons.shopping_bag_outlined),
-                              title: Text(
-                                siparis.sepetAdi,
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Divider(),
-                                  CustomRow(
-                                    message1: "Sipariş No",
-                                    message2: siparis.siparisId,
-                                  ),
-                                  CustomRow(message1: "Kargo", message2: siparis.kargo),
-                                  CustomRow(message1: "Kaynak", message2: siparis.kaynak),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
+                      elevation: 1,
+                      borderRadius: BorderRadius.circular(20),
+                      underline: const SizedBox(),
+                      value: selectedKaynakValue,
+                      hint: const Text('Sipariş Kaynak'),
+                      items: kaynakOptions.map((String item) {
+                        return DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(item),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        ref.read(selectedKaynakValueProvider.notifier).state =
+                            newValue;
+                      },
+                    ),
+                    loading: () => const Center(
+                        child: CircularProgressIndicator(
+                      color: loginColors,
+                    )),
+                    error: (error, stack) => Text('Hata: $error'),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Kargo Dropdown
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: loginColors, width: 2)),
+                  width: MediaQuery.of(context).size.width,
+                  child: kargoOptionsAsync.when(
+                    data: (kargoOptions) => DropdownButton<String>(
+                      isExpanded: true,
+                      menuWidth: MediaQuery.of(context).size.width / 1.1,
+                      icon: const Icon(
+                        Icons.arrow_drop_down_sharp,
+                        color: loginColors,
                       ),
-              ),
-            ],
+                      elevation: 1,
+                      borderRadius: BorderRadius.circular(20),
+                      underline: const SizedBox(),
+                      value: selectedFirmaValue,
+                      hint: const Text('Kargo Firması'),
+                      items: kargoOptions.map((String item) {
+                        return DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(item),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        ref.read(selectedFirmaValueProvider.notifier).state =
+                            newValue;
+                      },
+                    ),
+                    loading: () => const Center(
+                        child: CircularProgressIndicator(
+                      color: loginColors,
+                    )),
+                    error: (error, stack) => Text('Hata: $error'),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(backgroundColor: loginColors),
+                    onPressed: () async {
+                      _sendRequest(context);
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Filtrele",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleMedium
+                              ?.copyWith(color: Colors.white),
+                        ),
+                        const SizedBox(width: 5),
+                        const Icon(
+                          Icons.search,
+                          color: Colors.white,
+                          size: 25,
+                        )
+                      ],
+                    )),
+                const SizedBox(height: 20),
+                // Diğer filtreler ve liste gösterimi
+                Expanded(
+                  child: siparisState.isEmpty
+                      ? const Center(child: Text("Gösterilecek sipariş yok"))
+                      : ListView.builder(
+                          itemCount: siparisState.length,
+                          itemBuilder: (context, index) {
+                            final siparis = siparisState[index];
+                            return Card(
+                              elevation: 5,
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 4),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                side: BorderSide(
+                                  color:
+                                      const Color(0xFFF2B91D).withOpacity(0.5),
+                                  width: 1,
+                                ),
+                              ),
+                              color: Colors.white,
+                              child: ListTile(
+                                leading:
+                                    const Icon(Icons.shopping_bag_outlined),
+                                title: Text(
+                                  siparis.sepetAdi,
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Divider(),
+                                    CustomRow(
+                                      message1: "Sipariş No",
+                                      message2: siparis.siparisId,
+                                    ),
+                                    CustomRow(
+                                        message1: "Kargo",
+                                        message2: siparis.kargo),
+                                    CustomRow(
+                                        message1: "Kaynak",
+                                        message2: siparis.kaynak),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -225,17 +260,20 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
     final selectedFirmaValue = ref.read(selectedFirmaValueProvider);
     final selectedKaynakValue = ref.read(selectedKaynakValueProvider);
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    final userId = prefs.getString('userId'); // SharedPreferences'tan userId alınır
+    final userId =
+        prefs.getString('userId'); // SharedPreferences'tan userId alınır
 
     if (selectedFirmaValue == null && selectedKaynakValue == null) {
       ref.read(siparisProvider.notifier).sendSiparisAta(userId!);
     } else {
-      final success = await ref
-          .read(siparisProvider.notifier)
-          .sendSiparisData(userId!, kargo: selectedFirmaValue, kaynak: selectedKaynakValue);
+      final success = await ref.read(siparisProvider.notifier).sendSiparisData(
+          userId!,
+          kargo: selectedFirmaValue,
+          kaynak: selectedKaynakValue);
 
       if (!success) {
-        _showMessage('Veri bulunamadı', context); // Eğer false dönerse mesaj göster
+        _showMessage(
+            'Veri bulunamadı', context); // Eğer false dönerse mesaj göster
       }
     }
   }

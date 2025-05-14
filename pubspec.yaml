@@ -42,7 +42,7 @@ dependencies:
   shared_preferences: ^2.3.5
 
   #barcode scanner 
-  pointmobile_scanner_advanced: ^0.0.10
+  pointmobile_scanner_advanced: ^0.0.14
 
   #http 
   dio: ^5.7.0
